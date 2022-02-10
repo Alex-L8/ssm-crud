@@ -52,7 +52,7 @@
 
     <!--添加数据对话框表单-->
     <el-dialog
-            title="编辑品牌"
+            title="添加品牌"
             :visible.sync="dialogVisible"
             width="30%"
             >
@@ -98,25 +98,25 @@
     >
         <el-form ref="form" :model="brand" label-width="80px">
             <el-form-item label="品牌名称">
-                <el-input v-model="brand.brandName"></el-input>
+                <el-input v-model="brandEcho.brandName"></el-input>
             </el-form-item>
 
             <el-form-item label="企业名称">
-                <el-input v-model="brand.companyName"></el-input>
+                <el-input v-model="brandEcho.companyName"></el-input>
             </el-form-item>
 
             <el-form-item label="排序">
-                <el-input v-model="brand.ordered"></el-input>
+                <el-input v-model="brandEcho.ordered"></el-input>
             </el-form-item>
 
             <el-form-item label="备注">
-                <el-input type="textarea" v-model="brand.description"></el-input>
+                <el-input type="textarea" v-model="brandEcho.description"></el-input>
             </el-form-item>
 
             <el-form-item label="状态">
-                <el-switch v-model="brand.status"
-                           active-value="1"
-                           inactive-value="0"
+                <el-switch v-model="brandEcho.status"
+                           :active-value="1"
+                           :inactive-value="0"
                 ></el-switch>
             </el-form-item>
 
@@ -345,6 +345,7 @@
                         //关闭窗口
                         this.dialogVisible=false
                         this.selectAll();
+                        this.brand={}
 
                         //成功提示
                         this.$message({
@@ -370,7 +371,7 @@
             },*/
             //点击修改时，回显要修改的数据
             Update(row){
-                this.brand=row
+                this.brandEcho=row
                 this.updateVisible = true;
             },
 
@@ -404,9 +405,9 @@
                     //发送AJAX请求
                     axios({
                         method:"post",
-                        url:"http://localhost:8080/ssm-crud/brand/updateBrand",
+                        url:"http://localhost:8080/ssm-crud/brand",
                         params:{_method:"put"},
-                        data:this.brand
+                        data:this.brandEcho
                     }).then(resp =>{
                         if(resp.data=="success") {
                             //修改成功
@@ -414,7 +415,6 @@
                             this.updateVisible = false
                             this.currentPage=1;
                             this.selectAll();
-
                             //成功提示
                             this.$message({
                                 message: '恭喜你，修改成功！',
@@ -449,6 +449,7 @@
             handleCurrentChange(val) {
                 // console.log(`当前页: ${val}`);
                 this.currentPage=val;
+                this.brand={}
                 this.selectAll()
             }
 
@@ -469,6 +470,15 @@
 
                 // 品牌模型数据
                 brand: {
+                    status:'',
+                    brandName: "",
+                    companyName: "",
+                    id:'',
+                    ordered:'',
+                    description:""
+                },
+                // 回显时用的品牌模型数据
+                brandEcho: {
                     status:'',
                     brandName: "",
                     companyName: "",
